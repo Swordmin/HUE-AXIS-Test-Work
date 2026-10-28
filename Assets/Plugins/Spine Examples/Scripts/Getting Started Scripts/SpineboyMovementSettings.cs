@@ -2,10 +2,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Spine.Unity.Examples {
-	/// <summary>
-	/// Tuning parameters for the Hue Axis test task.
-	/// Runtime state belongs to SpineboyBeginnerModel, not this asset.
-	/// </summary>
+
 	[CreateAssetMenu(fileName = "SpineboyMovementSettings", menuName = "Spine/Examples/Spineboy Movement Settings")]
 	public class SpineboyMovementSettings : ScriptableObject {
 		[Header("Cursor Follow")]

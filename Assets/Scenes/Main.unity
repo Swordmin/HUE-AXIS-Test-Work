@@ -4874,7 +4874,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5523,7 +5522,6 @@ MonoBehaviour:
   movementCamera: {fileID: 519420031}
   placeAtLowerThirdOnStart: 0
   shootInterval: 0.12
-  legacyMoveDistance: 2
   <IsAiming>k__BackingField: 0
 --- !u!4 &1086504038
 Transform:
@@ -5666,6 +5664,8 @@ MonoBehaviour:
   gunBoneName: gun
   barrelBoneName: gun-tip
   gunToleranceDegrees: 3
+  muzzleFollowsGunCorrection: 1
+  muzzleBoneName: muzzle
   hideCrosshair: 1
   logHeightOnStart: 1
   showHeightLine: 1
@@ -5749,33 +5749,25 @@ MonoBehaviour:
   aim: {fileID: 11400000, guid: 845885c38d8cfea44b663ec591350733, type: 2}
   aimHigh: {fileID: 11400000, guid: 845885c38d8cfea44b663ec591350733, type: 2}
   shoot: {fileID: 11400000, guid: e0fef5f66da7d5e4b959716bea8ffb08, type: 2}
-  jump: {fileID: 11400000, guid: d5155b4c06023cd48aca39e850cd227a, type: 2}
   turn: {fileID: 11400000, guid: 0f823eaa809b109479bf5708b1f5ff21, type: 2}
   aimMixBlend: 2
   aimHighMixBlend: 2
   shootMixBlend: 2
   fallbackFlipDuration: 0.1
   turnFlipEventName: turn
-  footstepEvent: {fileID: 11400000, guid: 910b84ab2bcf7cc428f4a27a81bbe44b, type: 2}
   walkPhaseOffset: 0.5
   runPhaseOffset: 0.7
   reverseLocomotionPhaseWhenMovingLeft: 1
   reverseOnlyLegs: 1
-  useShortestRotation: 0
+  useShortestRotation: 1
   armRootBoneNames:
   - front-shoulder
   - rear-shoulder
   - front-upper-arm
   - rear-upper-arm
   facingPhaseBlendTime: 0.18
-  footstepPitchOffset: 0.2
-  gunsoundPitchOffset: 0.13
-  minFootstepInterval: 0.12
-  footstepSource: {fileID: 1840557919}
-  gunSource: {fileID: 943723950}
-  jumpSource: {fileID: 0}
   gunParticles: {fileID: 349413726}
-  aimWeight: 0
+  _aimWeight: 0
 --- !u!1 &1840557916
 GameObject:
   m_ObjectHideFlags: 0

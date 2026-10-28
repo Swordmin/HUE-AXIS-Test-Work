@@ -41,6 +41,11 @@ namespace Spine.Unity.Examples
         [SpineBone(dataField: "skeletonAnimation")]
         public string barrelBoneName = "gun-tip";
         [Range(0f, 9f)] public float gunToleranceDegrees = 3f;
+        [Tooltip("The muzzle flash bone is a sibling of the gun bone (both children of the bracer), so it does not follow the gun correction by itself. " +
+            "With this enabled the muzzle is rotated together with the gun around the gun pivot, so the shoot animation stays attached to the barrel.")]
+        public bool muzzleFollowsGunCorrection = true;
+        [SpineBone(dataField: "skeletonAnimation")]
+        public string muzzleBoneName = "muzzle";
 
         [Header("Crosshair")]
         public bool hideCrosshair = true;
@@ -53,6 +58,7 @@ namespace Spine.Unity.Examples
         private Bone _bone;
         private Bone _gunBone;
         private Bone _barrelBone;
+        private Bone _muzzleBone;
         private Bone _shoulderBone;
         private Bone _forearmBone;
         private Slot[] _crosshairSlots;
@@ -63,6 +69,10 @@ namespace Spine.Unity.Examples
         private bool _warnedGun;
         private float _gunBaseRotation;
         private bool _gunRotationModified;
+        private float _muzzleBaseX;
+        private float _muzzleBaseY;
+        private float _muzzleBaseRotation;
+        private bool _muzzleModified;
         private float _cachedCharacterHeight;
 
         public float CharacterHeight => GetCharacterHeight();
@@ -121,6 +131,7 @@ namespace Spine.Unity.Examples
             _bone = null;
             _gunBone = null;
             _barrelBone = null;
+            _muzzleBone = null;
             _shoulderBone = null;
             _forearmBone = null;
         }
@@ -146,6 +157,7 @@ namespace Spine.Unity.Examples
             _bone = FindBone(skeleton, boneName);
             _gunBone = FindBone(skeleton, gunBoneName);
             _barrelBone = FindBone(skeleton, barrelBoneName);
+            _muzzleBone = FindBone(skeleton, muzzleBoneName);
             _shoulderBone = FindBone(skeleton, shoulderBoneName);
             _forearmBone = FindBone(skeleton, forearmBoneName);
             CacheCrosshairSlots(skeleton);
@@ -227,6 +239,12 @@ namespace Spine.Unity.Examples
             _bone.Y = boneSpaceTarget.y;
 
             if (_gunBone != null) _gunBaseRotation = _gunBone.Rotation;
+            if (_muzzleBone != null)
+            {
+                _muzzleBaseX = _muzzleBone.X;
+                _muzzleBaseY = _muzzleBone.Y;
+                _muzzleBaseRotation = _muzzleBone.Rotation;
+            }
         }
 
         private Vector3 GetCursorWorldPosition()
@@ -271,12 +289,47 @@ namespace Spine.Unity.Examples
             float excess;
             if (!TryGetGunAngleExcess(out excess)) return;
 
-            _gunBone.Rotation = _gunBaseRotation + excess * weight * GetMirrorSign(_gunBone.Parent);
+            float delta = excess * weight * GetMirrorSign(_gunBone.Parent);
+            _gunBone.Rotation = _gunBaseRotation + delta;
             _gunRotationModified = true;
+
+            ApplyMuzzleFollow(delta);
+        }
+
+        /// <summary>
+        /// Rotates the muzzle bone rigidly around the gun pivot by the same angle the gun was corrected by.
+        /// Works because 'muzzle' and 'gun' share the same parent (rear-bracer), so the delta is valid in the same local space.
+        /// </summary>
+        private void ApplyMuzzleFollow(float deltaDegrees)
+        {
+            if (!muzzleFollowsGunCorrection || _muzzleBone == null) return;
+            if (_muzzleBone.Parent != _gunBone.Parent) return;
+
+            float rad = deltaDegrees * Mathf.Deg2Rad;
+            float cos = Mathf.Cos(rad);
+            float sin = Mathf.Sin(rad);
+
+            float dx = _muzzleBaseX - _gunBone.X;
+            float dy = _muzzleBaseY - _gunBone.Y;
+            _muzzleBone.X = _gunBone.X + dx * cos - dy * sin;
+            _muzzleBone.Y = _gunBone.Y + dx * sin + dy * cos;
+            _muzzleBone.Rotation = _muzzleBaseRotation + deltaDegrees;
+            _muzzleModified = true;
         }
 
         private void HandleUpdateComplete(ISkeletonAnimation animated)
         {
+            if (_muzzleModified)
+            {
+                _muzzleModified = false;
+                if (_muzzleBone != null)
+                {
+                    _muzzleBone.X = _muzzleBaseX;
+                    _muzzleBone.Y = _muzzleBaseY;
+                    _muzzleBone.Rotation = _muzzleBaseRotation;
+                }
+            }
+
             if (!_gunRotationModified) return;
 
             _gunRotationModified = false;
