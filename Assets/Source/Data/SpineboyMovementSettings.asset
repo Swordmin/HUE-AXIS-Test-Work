@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1d2c8a94a2f4de8b7a19c421093df71, type: 3}
+  m_Name: SpineboyMovementSettings
+  m_EditorClassIdentifier: spine-unity-examples::Spine.Unity.Examples.SpineboyMovementSettings
+  maxSpeed: 5
+  acceleration: 12
+  brakingDeceleration: 18
+  followSmoothTime: 0.4
+  stopDistance: 0.025
+  stopSpeed: 0.08
+  horizontalScreenPadding: 0.02
+  verticalScreenFraction: 0.28
+  placeAtLowerThirdOnStart: 0
+  idleToWalkStartSpeed: 0.08
+  idleToWalkEndSpeed: 0.9
+  runAnimationBlendStartSpeed: 1.8
+  runAnimationBlendEndSpeed: 4.2
+  locomotionBlendSmoothTime: 0.08
+  minimumFacingSpeed: 0.2
+  facingDeadZonePixels: 16
+  facingDirectionConfirmTime: 0.12
+  facingTurnCooldown: 0.18
+  cyclesAcrossScreen: 6
+  aimExtendedHeightMultiplier: 2
+  aimHeightHysteresisFraction: 0.03
+  aimBlendDuration: 0.12
